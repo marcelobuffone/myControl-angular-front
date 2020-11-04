@@ -1,0 +1,79 @@
+<div class="container main-container">
+
+    <h1>New Payment</h1>
+    <ngx-spinner bdColor = "rgba(0, 0, 0, 0.8)" size = "default" color = "#fff" type = "pacman" [fullScreen] = "true"><p style="color: white" > Loading... </p></ngx-spinner>
+    <hr>
+    <div class="row">
+        <div class="col-md-10">
+            <form novalidate="novalidate" (ngSubmit)="createPayment()" [formGroup]="paymentForm">
+
+                <div class="alert alert-danger" *ngIf="errors.length > 0">
+                    <h3 id="msgRetorno">Ooops! see the messages below:</h3>
+                    <ul>
+                        <li *ngFor="let error of errors">{{ error }}</li>
+                    </ul>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label">Description</label>
+                    <div>
+                        <input class="form-control" id="description" type="text" placeholder="(required)" formControlName="description" [ngClass]="{'is-invalid': displayMessage.description }" />
+                        <span class="text-danger" *ngIf="displayMessage.description">
+                            <p [innerHTML]="displayMessage.description"></p>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label">Value</label>
+                    <div>
+                        <input class="form-control" id="value" type="text"  placeholder="(required)" formControlName="value" [textMask]="{mask: MASKS.number.textMask}" [ngClass]="{'is-invalid': displayMessage.value }" />
+                        <span class="text-danger" *ngIf="displayMessage.value">
+                            <p [innerHTML]="displayMessage.value"></p>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label">startDate</label>
+                    <div>
+                        <input class="form-control" id="startDate" type="date"  formControlName="startDate" [ngClass]="{'is-invalid': displayMessage.startDate }" />
+                        <span class="text-danger" *ngIf="displayMessage.startDate">
+                            <p [innerHTML]="displayMessage.startDate"></p>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label">endDate</label>
+                    <div>
+                        <input class="form-control" id="endDate" type="date" placeholder="end date" formControlName="endDate" [ngClass]="{'is-invalid': displayMessage.endDate }" />
+                        <span class="text-danger" *ngIf="displayMessage.endDate">
+                            <p [innerHTML]="displayMessage.endDate"></p>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label">Type</label>
+                    <div>
+                        <select class="form-control" id="type" formControlName="type" [ngClass]="{ 'is-invalid': displayMessage.type }">
+                            <option value="">Type</option>
+                            <option value="expense">expense</option>
+                            <option value="profit">profit</option>
+                          </select>
+                        <span class="text-danger" *ngIf="displayMessage.type">
+                        <p [innerHTML]="displayMessage.type"></p>
+                    </span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <input type="submit" value="Create" class="btn btn-primary">&nbsp;
+                    <a class="btn btn-info" [routerLink]="[ '/payment/index']">Back</a>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>

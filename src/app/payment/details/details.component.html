@@ -1,0 +1,56 @@
+<div class="container main-container">
+    <h1>{{ payment.description }} - Details</h1>
+    <div>
+        <hr />
+        <dl class="row">
+
+            <dt class="col-sm-2">
+                <label class="control-label">Description</label>
+            </dt>
+            <dd class="col-sm-10">
+                {{ payment.description }}
+            </dd>
+
+            <dt class="col-sm-2">
+                <label class="control-label">Value</label>
+            </dt>
+            <dd class="col-sm-10">
+                {{ payment.value | numberBrazil }}
+            </dd>
+
+            <dt class="col-sm-2">
+                <label class="control-label">Start Date</label>
+            </dt>
+            <dd class="col-sm-10">
+                {{ payment.startDate | date:'dd/MM/yyyy' }}
+            </dd>
+
+            <dt class="col-sm-2">
+                <label class="control-label">End Date</label>
+            </dt>
+            <dd class="col-sm-10">
+                {{ payment.endDate | date:'dd/MM/yyyy'}}
+            </dd>
+
+            <dt class="col-sm-2">
+                <label class="control-label">Type</label>
+            </dt>
+            <dd class="col-sm-10">
+                {{ payment.type }}
+            </dd>
+
+            <dt class="col-sm-2">
+                <label class="control-label">Active</label>
+            </dt>
+            <dd class="col-sm-10">
+                {{ payment.isActive }}
+            </dd>
+
+        </dl>
+    </div>
+
+    <div>
+        <a class="btn btn-dark" [routerLink]="['/payment/update',payment.id]">Editar</a>&nbsp;
+        <a class="btn btn-info" [routerLink]="['/payment/index']">Voltar</a>
+    </div>
+</div>

@@ -1,0 +1,194 @@
+<div class="container main-container">
+
+
+    <div class="container-fluid">
+
+        <div class="row">
+
+            <div class="col-xl-8 col-lg-7">
+
+                <div class="row">
+                    <div class="col-xl-6 col-md-6 mb-4">
+                        <div class="card border-left-success shadow h-100 py-2">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Profit
+                                        </div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800"> {{profit| currencyBrazil}}
+                                        </div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-angle-up fa-2x text-success"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-6 col-md-6 mb-4">
+                        <div class="card border-left-danger shadow h-100 py-2">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Expense
+                                        </div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{expense| currencyBrazil}}
+                                        </div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-angle-down fa-2x text-danger"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-6 col-md-6 mb-4">
+                        <div class="card border-left-primary shadow h-100 py-2">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">TOTAL
+                                        </div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{total| currencyBrazil}}
+                                        </div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-dollar-sign fa-2x text-primary"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-xl-4 col-lg-5">
+                <canvas baseChart [data]="pieChartData()" [labels]="pieChartLabels" [chartType]="pieChartType"
+                    [options]="pieChartOptions" [plugins]="pieChartPlugins" [colors]="pieChartColors"
+                    [legend]="pieChartLegend">
+                </canvas>
+            </div>
+
+        </div>
+
+        <hr>
+        <div class="alert alert-danger" *ngIf="errors.length > 0">
+            <h3 id="msgRetorno">Oops!:</h3>
+            <ul>
+                <li *ngFor="let error of errors">{{ error }}</li>
+            </ul>
+        </div>
+
+        <div class="row">
+            <nav class="navbar">
+                <p>
+                    <a class="btn btn-info" [routerLink]="['/payment/new']">New</a>
+                </p>
+            </nav>
+        </div>
+
+
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <input class="form-control" type="text" name="descriptionSearch" [(ngModel)]="descriptionSearch"
+                    (ngModelChange)="search()" placeholder="Search ...">
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+
+                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>Description</th>
+                                <th>Value</th>
+                                <th>Type</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th>Active</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let payment of paymentsPagined">
+                                <td>
+                                    {{ payment.description }}
+                                </td>
+                                <td>
+                                    R$ {{payment.value | numberBrazil}}
+                                </td>
+                                <td>
+                                    {{payment.type }}
+                                </td>
+                                <td>
+                                    {{payment.startDate | date:'dd/MM/yyyy' }}
+                                </td>
+                                <td>
+                                    {{payment.endDate  | date:'dd/MM/yyyy' }}
+                                </td>
+                                <td>
+                                    <input [checked]="payment.isActive" class="check-box" disabled="disabled"
+                                        type="checkbox">
+                                </td>
+                                <td class="text-center">
+                                    <a class="btn btn-info btn-circle btn-sm"
+                                        [routerLink]="['/payment/details',payment.id]">
+                                        <span class="fa fa-search"></span>
+                                    </a>&nbsp;
+                                    <a class="btn btn-warning btn-circle btn-sm"
+                                        [routerLink]="['/payment/update',payment.id]">
+                                        <span class="fa fa-pencil-alt"></span>
+                                    </a>&nbsp;
+                                    <a class="btn btn-danger btn-circle btn-sm" href="javascript:void(0)"
+                                        (click)="openModal(content, payment.id)">
+                                        <span class="fa fa-trash"></span>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="d-flex justify-content-between p-2">
+                        <ngb-pagination [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize"
+                            (pageChange)="refreshPayments()">
+                        </ngb-pagination>
+
+                        <select class="custom-select" style="width: auto" [(ngModel)]="pageSize"
+                            (ngModelChange)="refreshPayments()">
+                            <option [ngValue]="5">5</option>
+                            <option [ngValue]="10">10</option>
+                            <option [ngValue]="20">20</option>
+                            <option [ngValue]="100">100</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+
+    <ng-template #content let-c="close" let-d="dismiss">
+
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-title">Confirm</h4>
+            <button type="button" class="close" aria-label="Close" (click)="d('')">
+                <span aria-hidden="true">&times;</span>
+              </button>
+        </div>
+        <div class="modal-body">
+            <p><strong>Are you sure you want to delete <span class="text-primary">{{paymentNameSelectedToDelete}}</span> ?</strong>
+            </p>
+        </div>
+        <div class="modal-footer">
+            <input type="submit" value="Ok" class="btn btn-danger" (click)="deletePayment()">
+        </div>
+
+    </ng-template>
+
+
+
+</div>
